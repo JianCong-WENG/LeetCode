@@ -1,0 +1,52 @@
+LeetCode 3
+无重复字符的最长子串
+
+给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
+
+示例 1:
+
+输入: "abcabcbb"
+输出: 3 
+解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+示例 2:
+
+输入: "bbbbb"
+输出: 1
+解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
+示例 3:
+
+输入: "pwwkew"
+输出: 3
+解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
+     请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
+
+思路：滑动窗口法
+code：
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        if not len(s):
+            return 0
+        if len(s) == 1:
+            return 1
+
+        max_unique = 0   # 记录最大字串长度
+        count = 0  # 记录当前字串长度
+        index_l = 0
+        apl_set = set()  # 统计是否有重复字符的set
+        for index_r in range(len(s)):
+            # 字符不重复，右指针右移，记录最大值，将字符添加到apl_set
+            if s[index_r] not in apl_set:
+                apl_set.add(s[index_r])
+                count += 1
+                if count > max_unique:
+                    max_unique = count
+            # 发现字串重复，左指针右移
+            else:
+                while s[index_l] != s[index_r]:
+                    apl_set.remove(s[index_l])   # 没移动一次删除apl_set里面一个元素
+                    count -= 1
+                    index_l += 1  #左指针右移
+                # 当左指针指向值等于右边指针，抵消处理apl_set和count
+                # 因为apl_set减去1（左）又加1（右），count减1（左）又加1（右）
+                index_l += 1
+        return max_unique 
