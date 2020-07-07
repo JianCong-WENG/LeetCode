@@ -1,0 +1,27 @@
+24. 两两交换链表中的节点
+
+给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。
+
+你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
+
+示例:
+给定 1->2->3->4, 你应该返回 2->1->4->3.
+
+思路：3指针，前进交换
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def swapPairs(self, head: ListNode) -> ListNode:
+        Thead = ListNode(None)  # 头指针，用于返回
+        Thead.next = head
+        s = Thead  # 1号指针
+        while s.next and s.next.next:  # 判断1号指针后面是否还有两个元素
+            a,b = s.next, s.next.next  # a 2号指针，b 3号指针
+            s.next, a.next = b, b.next  # s指b, a 指b后一位
+            b.next = a  # b指a
+            s = s.next.next  # s往前走两步
+        return Thead.next
