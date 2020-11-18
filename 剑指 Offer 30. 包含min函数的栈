@@ -1,0 +1,112 @@
+定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的 min 函数在该栈中，调用 min、push 及 pop 的时间复杂度都是 O(1)。
+
+示例:
+
+MinStack minStack = new MinStack();
+minStack.push(-2);
+minStack.push(0);
+minStack.push(-3);
+minStack.min();   --> 返回 -3.
+minStack.pop();
+minStack.top();      --> 返回 0.
+minStack.min();   --> 返回 -2.
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/bao-han-minhan-shu-de-zhan-lcof
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+思路：数据栈+辅助栈；辅助栈维护非严格降序
+c++代码：
+class MinStack {
+private:
+    stack<int> stack_data;
+    stack<int> stack_help;
+
+public:
+    /** initialize your data structure here. */
+    MinStack() {
+
+    }
+    
+    void push(int x) {
+        stack_data.push(x);
+        if (stack_help.empty()){
+            stack_help.push(x);
+        }
+        else if (!stack_help.empty() && stack_help.top()>=x){
+            stack_help.push(x);
+        }
+
+    }
+    
+    void pop() {
+        int x = stack_data.top();
+        stack_data.pop();
+        if (!stack_help.empty() && stack_help.top()==x){
+            stack_help.pop();
+        }
+    }
+    
+    int top() {
+        return stack_data.top();
+
+    }
+    
+    int min() {
+        return stack_help.top();
+    }
+
+};
+
+python:
+class MinStack(object):
+
+    def __init__(self):
+        """
+        initialize your data structure here.
+        """
+        self.stack_data = []
+        self.stack_help = []
+
+
+    def push(self, x):
+        """
+        :type x: int
+        :rtype: None
+        """
+        self.stack_data.append(x)
+        if not self.stack_help:
+            self.stack_help.append(x)
+        elif self.stack_help[-1] >= x:
+            self.stack_help.append(x)
+
+
+    def pop(self):
+        """
+        :rtype: None
+        """
+        x = self.stack_data.pop()
+
+        if self.stack_help and x == self.stack_help[-1]:
+            self.stack_help.pop()
+        
+
+
+    def top(self):
+        """
+        :rtype: int
+        """
+        if self.stack_data:
+            return self.stack_data[-1]
+        else:
+            return None
+
+
+    def min(self):
+        """
+        :rtype: int
+        """
+        if self.stack_help:
+            return self.stack_help[-1]
+        else:
+            return None
