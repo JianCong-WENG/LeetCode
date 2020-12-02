@@ -1,0 +1,66 @@
+请实现一个函数按照之字形顺序打印二叉树，即第一行按照从左到右的顺序打印，第二层按照从右到左的顺序打印，第三行再按照从左到右的顺序打印，其他行以此类推。
+
+ 
+
+例如:
+给定二叉树: [3,9,20,null,null,15,7],
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+返回其层次遍历结果：
+
+[
+  [3],
+  [20,9],
+  [15,7]
+]
+
+思路：BFS广度优先遍历；双向队列辅助；用flag交替正序和逆序
+
+C++代码：
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        deque<TreeNode*> que;
+        vector<vector<int> > res;
+        vector<int> tmp;
+        if(!root) return res;
+        bool flag = true;
+        que.push_back(root);
+        while(!que.empty()){
+            int range = que.size();
+            for(int i=0; i<range; i++){
+                if(flag){
+                    TreeNode* out = que.front();
+                    tmp.push_back(out->val);
+                    que.pop_front();
+                    if(out->left) que.push_back(out->left);
+                    if(out->right) que.push_back(out->right);
+                }else{
+                    TreeNode* out = que.back();
+                    tmp.push_back(out->val);
+                    que.pop_back();
+                    if(out->right) que.push_front(out->right);
+                    if(out->left) que.push_front(out->left);
+                }
+            }
+            flag = !flag;
+            res.push_back(tmp);
+            tmp.clear();
+        }
+        return res;
+
+    }
+};
