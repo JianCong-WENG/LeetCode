@@ -1,0 +1,73 @@
+翻转一棵二叉树。
+
+示例：
+
+输入：
+
+     4
+   /   \
+  2     7
+ / \   / \
+1   3 6   9
+输出：
+
+     4
+   /   \
+  7     2
+ / \   / \
+9   6 3   1
+
+思路一：深度优先遍历，递归
+C++：
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if(root == nullptr) return root;
+        TreeNode* tmp = root->left;
+        root->left = invertTree(root->right);
+        root->right = invertTree(tmp);
+        return root;
+    }
+};
+
+思路二：广度优先遍历，非递归
+C++:
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if(root == nullptr) return root;
+        queue<TreeNode*> help_queue;
+        help_queue.push(root);
+        while(!help_queue.empty()){
+            TreeNode* tmp = help_queue.front();
+            help_queue.pop();
+            if(tmp == nullptr) continue;
+            swap(tmp->left, tmp->right);
+            help_queue.push(tmp->left);
+            help_queue.push(tmp->right);
+        }
+        return root;
+    }
+};
