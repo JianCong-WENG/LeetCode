@@ -1,0 +1,106 @@
+257. 二叉树的所有路径
+给定一个二叉树，返回所有从根节点到叶子节点的路径。
+
+说明: 叶子节点是指没有子节点的节点。
+
+示例:
+
+输入:
+
+   1
+ /   \
+2     3
+ \
+  5
+
+输出: ["1->2->5", "1->3"]
+
+解释: 所有根节点到叶子节点的路径为: 1->2->5, 1->3
+
+思路：深度优先遍历，自顶而下，先序遍历
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<string> binaryTreePaths(TreeNode* root) {
+        vector<string> res;
+        string path = "";
+        recur(root, path, res);
+        return res;
+    }
+
+    void recur(TreeNode* root, string path, vector<string>& res){
+        if(root == nullptr){
+            return;
+        }
+        if(root->left == nullptr && root->right == nullptr){
+            if(!path.empty()){
+                path += "->";
+            }
+            path += to_string(root->val);
+            res.push_back(path);
+        }else{
+            if(!path.empty()){
+                path += "->";
+            }
+            path += to_string(root->val);
+            recur(root->left, path, res);
+            recur(root->right, path, res);
+        }
+    }
+};
+
+思路二：广度优先遍历
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<string> binaryTreePaths(TreeNode* root) {
+        vector<string> res;
+        if(root == nullptr) return res;
+        queue<TreeNode*> node_queue;
+        queue<string> path_queue;
+
+        string path = to_string(root->val);
+        node_queue.push(root);
+        path_queue.push(path);
+        while(!node_queue.empty()){
+            TreeNode* tmp_node = node_queue.front();
+            node_queue.pop();
+            string path = path_queue.front();
+            path_queue.pop();
+            if(tmp_node->left == nullptr && tmp_node->right == nullptr){
+                res.push_back(path);
+            }else{
+                if(tmp_node->left != nullptr){
+                    path_queue.push(path + "->" + to_string(tmp_node->left->val));
+                    node_queue.push(tmp_node->left);
+                }
+                if(tmp_node->right != nullptr){
+                    path_queue.push(path + "->" + to_string(tmp_node->right->val));
+                    node_queue.push(tmp_node->right);
+                }
+            }
+        }
+        return res;
+    }
+};
