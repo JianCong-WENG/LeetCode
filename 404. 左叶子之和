@@ -1,0 +1,81 @@
+计算给定二叉树的所有左叶子之和。
+
+示例：
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+
+在这个二叉树中，有两个左叶子，分别是 9 和 15，所以返回 24
+
+思路一：深度遍历，在递归体无法中，无法确定当前节点(root)是否是左节点，可以给递归体加上参数is_left
+C++:
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int sumOfLeftLeaves(TreeNode* root) {
+        if(root == nullptr) return 0;
+        int sum = 0;
+        recur(root, false, sum);
+        return sum;
+
+    }
+
+    void recur(TreeNode* root, bool is_left, int& sum){
+        if(root == nullptr) return;
+        if(root->left == nullptr and root->right == nullptr){
+            if(is_left){
+            sum += root->val;
+            }
+        }
+        recur(root->left, true, sum);
+        recur(root->right, false, sum);
+        return;
+    }
+};
+
+思路二：广度优先遍历
+C++：
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int sumOfLeftLeaves(TreeNode* root) {
+        if(root == nullptr) return 0;
+        int sum = 0;
+        queue<TreeNode*> help_queue;
+        help_queue.push(root);
+        while(!help_queue.empty()){
+            TreeNode* tmp_node = help_queue.front();
+            help_queue.pop();
+            if(tmp_node->left != nullptr){
+                if(tmp_node->left->left == nullptr && tmp_node->left->right == nullptr){
+                    sum += tmp_node->left->val;
+                }else{
+                    help_queue.push(tmp_node->left);
+                }
+            }
+            if(tmp_node->right != nullptr){
+                help_queue.push(tmp_node->right);
+            }
+        }
+        return sum;
+    }
+};
