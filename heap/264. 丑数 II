@@ -1,0 +1,45 @@
+编写一个程序，找出第 n 个丑数。
+
+丑数就是质因数只包含 2, 3, 5 的正整数。
+
+示例:
+
+输入: n = 10
+输出: 12
+解释: 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 是前 10 个丑数。
+
+class Ugly{
+private:
+    priority_queue<long long> heap;
+    unordered_map<long long, int> hash_map;
+public:
+    vector<int> res;
+
+    Ugly(){
+        bulidUgly();
+    }
+    void bulidUgly(){
+        heap.push(-1);
+        vector<int> count_array = {2, 3, 5};
+        for(int i=0; i<1690; i++){
+            long long curr = heap.top();
+            heap.pop();
+            res.push_back(curr);
+            for (const auto &element : count_array){
+                if(hash_map.find(curr * element) == hash_map.end()){
+                    heap.push(curr * element);
+                    hash_map.insert({curr * element, 1});
+                }
+            }
+        }
+    }
+};
+
+class Solution {
+private:
+    Ugly ugly;
+public:
+    long long nthUglyNumber(int n) {
+        return -ugly.res[n-1];
+    }
+};
