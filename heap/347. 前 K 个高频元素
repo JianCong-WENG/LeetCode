@@ -1,0 +1,49 @@
+给定一个非空的整数数组，返回其中出现频率前 k 高的元素。
+
+ 
+
+示例 1:
+
+输入: nums = [1,1,1,2,2,3], k = 2
+输出: [1,2]
+示例 2:
+
+输入: nums = [1], k = 1
+输出: [1]
+
+思路：哈希+小根堆；注意STL中的优先队列用法与仿写函数
+C++：
+class Solution {
+private:
+    unordered_map<int, int> hash_map;
+public:
+    struct cmp{
+        bool operator() (pair<int, int>& m, pair<int, int>& n) {
+        return m.second > n.second;
+        }
+    };
+
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        vector<int> res(k);
+        for(int i=0; i<nums.size(); i++){
+            hash_map[nums[i]] ++;
+        }
+        priority_queue<pair<int, int>, vector<pair<int, int>>, cmp> queue;
+        for(unordered_map<int, int>::iterator iter = hash_map.begin(); iter != hash_map.end(); iter++){
+            if(queue.size() == k){
+                if(iter->second > queue.top().second){
+                    queue.pop();
+                    queue.push(*iter);
+                }
+            }else{
+                queue.push(*iter);
+            }
+        }
+        int queue_size = queue.size();
+        for(int i=0; i<queue_size; i++){
+            res[k-i-1] = queue.top().first;
+            queue.pop();
+        }
+        return res;
+    }
+};
